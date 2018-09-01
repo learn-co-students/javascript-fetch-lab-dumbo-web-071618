@@ -1,5 +1,4 @@
 function getIssues() {
-  const issuesDiv = document.querySelector('#issues')
   const repo = "https://api.github.com/repos/joalorro/javascript-fetch-lab/issues"
 
   fetch(repo, {
@@ -8,11 +7,20 @@ function getIssues() {
       Authorization: `token ${getToken()}`
     }
   })
-    .then(res => console.log(res))
+    .then(res => res.json())
+    .then(res => {
+      showIssues(res)
+    })
 
 }
 
 function showIssues(json) {
+  const issuesDiv = document.querySelector('#issues')
+  json.forEach(issue => {
+    let issueLi = document.createElement('li')
+    issueLi.innerText = `Title: ${issue.title}, Body: ${issue.body}`
+    issuesDiv.append(issueLi)
+  })
 }
 
 function createIssue(){
@@ -29,10 +37,7 @@ function createIssue(){
     headers: {
       Authorization: `token ${getToken()}`
     }
-  }).then( res => res)
-    .then(res => console.log(res))
-
-  getIssues()
+  })
 }
 
 function showResults(json) {
